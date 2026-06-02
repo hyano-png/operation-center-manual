@@ -1,0 +1,819 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OPERATION CENTER — 使い方ガイド</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Noto+Sans+JP:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #060c1e;
+    --bg-card: rgba(10, 18, 40, 0.95);
+    --bg-panel: rgba(16, 26, 52, 0.8);
+    --accent: #d4a050;
+    --accent2: #60b8e0;
+    --accent3: #68d391;
+    --warn: #e07060;
+    --border: rgba(100, 150, 220, 0.18);
+    --border-accent: rgba(200, 140, 70, 0.35);
+    --text: #c8d8f0;
+    --text-dim: #6080a0;
+    --text-muted: #8090b0;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Noto Sans JP', sans-serif;
+    font-weight: 300;
+    line-height: 1.7;
+    min-height: 100vh;
+  }
+
+  /* ── 星空背景 ── */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background:
+      radial-gradient(ellipse at 20% 20%, rgba(60, 100, 200, 0.08) 0%, transparent 60%),
+      radial-gradient(ellipse at 80% 80%, rgba(180, 100, 40, 0.06) 0%, transparent 60%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* ── ヘッダー ── */
+  .hero {
+    position: relative;
+    z-index: 1;
+    text-align: center;
+    padding: 64px 24px 48px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .hero-label {
+    font-family: 'Orbitron', monospace;
+    font-size: 10px;
+    letter-spacing: 4px;
+    color: var(--accent);
+    margin-bottom: 16px;
+    text-transform: uppercase;
+  }
+
+  .hero-title {
+    font-family: 'Orbitron', monospace;
+    font-size: clamp(24px, 5vw, 42px);
+    font-weight: 900;
+    color: #e8f0ff;
+    line-height: 1.2;
+    margin-bottom: 12px;
+  }
+
+  .hero-title span { color: var(--accent); }
+
+  .hero-sub {
+    font-size: 14px;
+    color: var(--text-muted);
+    max-width: 480px;
+    margin: 0 auto;
+  }
+
+  /* ── ナビ ── */
+  .toc {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    justify-content: center;
+    padding: 24px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .toc-item {
+    font-size: 11px;
+    padding: 5px 14px;
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    color: var(--text-muted);
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 0.2s;
+    white-space: nowrap;
+  }
+
+  .toc-item:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+    background: rgba(200, 140, 70, 0.08);
+  }
+
+  /* ── メインコンテンツ ── */
+  .container {
+    position: relative;
+    z-index: 1;
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 48px 24px 80px;
+  }
+
+  /* ── セクション ── */
+  .section {
+    margin-bottom: 56px;
+    scroll-margin-top: 24px;
+  }
+
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 24px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--border-accent);
+  }
+
+  .section-num {
+    font-family: 'Orbitron', monospace;
+    font-size: 11px;
+    color: var(--accent);
+    background: rgba(200, 140, 70, 0.1);
+    border: 1px solid rgba(200, 140, 70, 0.3);
+    border-radius: 4px;
+    padding: 3px 8px;
+    flex-shrink: 0;
+  }
+
+  .section-title {
+    font-family: 'Orbitron', monospace;
+    font-size: 15px;
+    font-weight: 700;
+    color: #e8f0ff;
+    letter-spacing: 1px;
+  }
+
+  /* ── カード ── */
+  .card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 20px 24px;
+    margin-bottom: 16px;
+  }
+
+  .card-title {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--accent2);
+    letter-spacing: 1px;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 7px;
+  }
+
+  /* ── ルールリスト ── */
+  .rule-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .rule-list li {
+    display: flex;
+    gap: 10px;
+    font-size: 13px;
+    color: var(--text);
+    line-height: 1.7;
+  }
+
+  .rule-list li::before {
+    content: '▸';
+    color: var(--accent);
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  /* ── 注意書き ── */
+  .note {
+    background: rgba(200, 140, 70, 0.07);
+    border-left: 3px solid var(--accent);
+    border-radius: 0 6px 6px 0;
+    padding: 10px 14px;
+    margin-top: 10px;
+    font-size: 12px;
+    color: #b89060;
+  }
+
+  .note strong { color: var(--accent); }
+
+  .note-blue {
+    background: rgba(80, 160, 220, 0.07);
+    border-left-color: var(--accent2);
+    color: #7aaccb;
+  }
+
+  .note-green {
+    background: rgba(100, 200, 140, 0.07);
+    border-left-color: var(--accent3);
+    color: #68b07a;
+  }
+
+  .note-red {
+    background: rgba(220, 80, 60, 0.07);
+    border-left-color: var(--warn);
+    color: #c08070;
+  }
+
+  /* ── スクリーンショットプレースホルダー ── */
+  .screenshot {
+    width: 100%;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    overflow: hidden;
+    margin: 14px 0;
+    background: rgba(6, 12, 28, 0.8);
+  }
+
+  .screenshot-bar {
+    background: rgba(20, 30, 60, 0.8);
+    padding: 7px 12px;
+    font-size: 10px;
+    color: var(--text-dim);
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .screenshot-bar::before {
+    content: '● ● ●';
+    color: rgba(200, 140, 70, 0.3);
+    font-size: 8px;
+    letter-spacing: 2px;
+  }
+
+  .screenshot-body {
+    padding: 0;
+    min-height: 160px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .screenshot-body img {
+    width: 100%;
+    display: block;
+  }
+
+  .screenshot-placeholder {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    color: var(--text-dim);
+    font-size: 12px;
+    background: repeating-linear-gradient(
+      45deg,
+      rgba(100, 140, 200, 0.02),
+      rgba(100, 140, 200, 0.02) 10px,
+      transparent 10px,
+      transparent 20px
+    );
+  }
+
+  .screenshot-placeholder .icon {
+    font-size: 28px;
+    opacity: 0.4;
+  }
+
+  /* ── ステップ ── */
+  .steps {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .step {
+    display: flex;
+    gap: 16px;
+    position: relative;
+  }
+
+  .step:not(:last-child)::after {
+    content: '';
+    position: absolute;
+    left: 15px;
+    top: 36px;
+    bottom: 0;
+    width: 1px;
+    background: var(--border);
+  }
+
+  .step-num {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: rgba(200, 140, 70, 0.15);
+    border: 1px solid rgba(200, 140, 70, 0.4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Orbitron', monospace;
+    font-size: 11px;
+    color: var(--accent);
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  .step-body {
+    padding-bottom: 24px;
+    flex: 1;
+  }
+
+  .step-label {
+    font-size: 13px;
+    font-weight: 700;
+    color: #dde8ff;
+    margin-bottom: 6px;
+  }
+
+  .step-desc {
+    font-size: 12px;
+    color: var(--text-muted);
+    line-height: 1.65;
+  }
+
+  /* ── バッジ ── */
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    font-size: 10px;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 4px;
+    margin: 0 3px;
+    vertical-align: middle;
+  }
+
+  .badge-gold { background: rgba(200,140,70,0.15); border: 1px solid rgba(200,140,70,0.4); color: #d4a050; }
+  .badge-blue { background: rgba(80,160,220,0.12); border: 1px solid rgba(80,160,220,0.35); color: #60b0d8; }
+  .badge-green { background: rgba(100,200,140,0.1); border: 1px solid rgba(100,200,140,0.35); color: #60c080; }
+  .badge-red { background: rgba(220,80,60,0.1); border: 1px solid rgba(220,80,60,0.35); color: #e07060; }
+
+  /* ── シュトセカ専用セクション ── */
+  .shutseka-section {
+    border: 1px solid rgba(80, 160, 220, 0.3);
+    border-radius: 10px;
+    overflow: hidden;
+    margin-top: 16px;
+  }
+
+  .shutseka-header {
+    background: rgba(80, 160, 220, 0.1);
+    padding: 10px 16px;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--accent2);
+    letter-spacing: 1px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .shutseka-body {
+    padding: 16px;
+  }
+
+  /* ── 重要ボックス ── */
+  .important-box {
+    background: rgba(220, 80, 60, 0.06);
+    border: 1px solid rgba(220, 80, 60, 0.25);
+    border-radius: 8px;
+    padding: 14px 16px;
+    margin-top: 12px;
+  }
+
+  .important-box .label {
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--warn);
+    letter-spacing: 1px;
+    margin-bottom: 8px;
+  }
+
+  .important-box p {
+    font-size: 12px;
+    color: #c08070;
+    line-height: 1.7;
+  }
+
+  /* ── フッター ── */
+  .footer {
+    position: relative;
+    z-index: 1;
+    text-align: center;
+    padding: 32px 24px;
+    border-top: 1px solid var(--border);
+    font-size: 11px;
+    color: var(--text-dim);
+  }
+
+  .footer strong {
+    font-family: 'Orbitron', monospace;
+    color: var(--accent);
+    font-size: 10px;
+  }
+
+  /* ── グリッド ── */
+  .grid-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+  }
+
+  @media (max-width: 600px) {
+    .grid-2 { grid-template-columns: 1fr; }
+  }
+
+  /* ── アニメーション ── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .section { animation: fadeUp 0.5s ease both; }
+  .section:nth-child(1) { animation-delay: 0.05s; }
+  .section:nth-child(2) { animation-delay: 0.1s; }
+  .section:nth-child(3) { animation-delay: 0.15s; }
+  .section:nth-child(4) { animation-delay: 0.2s; }
+  .section:nth-child(5) { animation-delay: 0.25s; }
+  .section:nth-child(6) { animation-delay: 0.3s; }
+  .section:nth-child(7) { animation-delay: 0.35s; }
+
+  /* ── 横線区切り ── */
+  hr.divider {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 20px 0;
+  }
+</style>
+</head>
+<body>
+
+<!-- ヘッダー -->
+<div class="hero">
+  <div class="hero-label">OPERATION CENTER</div>
+  <h1 class="hero-title">業務システム<span>使い方ガイド</span></h1>
+  <p class="hero-sub">正確な進捗管理のために、各入力ルールを必ず守ってください</p>
+
+  <div style="margin-top:28px;display:inline-block;background:rgba(10,18,40,0.8);border:1px solid rgba(200,140,70,0.35);border-radius:10px;padding:16px 32px;text-align:left">
+    <div style="font-size:10px;letter-spacing:2px;color:var(--accent);font-family:'Orbitron',monospace;margin-bottom:10px">GUEST ACCOUNT</div>
+    <div style="display:flex;flex-direction:column;gap:7px">
+      <div style="display:flex;gap:12px;align-items:center">
+        <span style="font-size:11px;color:var(--text-dim);width:40px;flex-shrink:0">ID</span>
+        <span style="font-family:monospace;font-size:14px;color:#e8f0ff;background:rgba(255,255,255,0.05);padding:4px 12px;border-radius:5px;letter-spacing:1px">guest@pntwhere.com</span>
+      </div>
+      <div style="display:flex;gap:12px;align-items:center">
+        <span style="font-size:11px;color:var(--text-dim);width:40px;flex-shrink:0">PW</span>
+        <span style="font-family:monospace;font-size:14px;color:#e8f0ff;background:rgba(255,255,255,0.05);padding:4px 12px;border-radius:5px;letter-spacing:1px">●●●●●●●●</span>
+      </div>
+    </div>
+    <div style="font-size:10px;color:var(--text-dim);margin-top:10px">※ 閲覧専用アカウントです。データの編集はできません。</div>
+  </div>
+</div>
+
+<!-- 目次 -->
+<nav class="toc">
+  <a class="toc-item" href="#sched">① 稼働予定の入力</a>
+  <a class="toc-item" href="#result">② 稼働実績の入力</a>
+  <a class="toc-item" href="#shutseka">③ シュトセカ対応の記録</a>
+  <a class="toc-item" href="#progress">④ 担当案件の進捗確認</a>
+  <a class="toc-item" href="#plan">⑤ 案件割り振りの確認</a>
+  <a class="toc-item" href="#today">⑥ 当日の件数目安</a>
+  <a class="toc-item" href="#edit">⑦ 案件情報の編集</a>
+</nav>
+
+<div class="container">
+
+  <!-- ① 稼働予定の入力 -->
+  <section class="section" id="sched">
+    <div class="section-header">
+      <span class="section-num">01</span>
+      <span class="section-title">稼働予定の入力</span>
+    </div>
+
+    <div class="card">
+      <div class="card-title">📅 入力場所</div>
+      <p style="font-size:13px">画面左メニュー <span class="badge badge-gold">稼働予定・実績入力</span> から入力します。</p>
+    </div>
+
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <div class="step-label">毎月15日までに翌月分を入力する</div>
+          <div class="step-desc">翌月の稼働日・稼働時間を日ごとにカレンダーに入力してください。入力が完了したら <span class="badge badge-green">入力完了にする</span> ボタンを押してください。</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <div class="step-label">定例に参加しない日は「定例参加なし」をチェック</div>
+          <div class="step-desc">定例ミーティングに参加しない日は、入力欄の <span class="badge badge-blue">定例参加なし</span> にチェックを入れてください。チェックがない日は自動的に30分が差し引かれた稼働可能時間になります。</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-body">
+          <div class="step-label">月間合計が契約時間と一致しているか確認する</div>
+          <div class="step-desc">画面左上の <strong style="color:#e0c080">月間稼働時間</strong> の数字が、自分の契約時間と一致しているかを必ず確認してください。</div>
+          <div class="screenshot">
+            <div class="screenshot-bar">稼働予定・実績入力 — カレンダー上部</div>
+            <div class="screenshot-body">
+              <div class="screenshot-placeholder">
+                <div class="icon">📸</div>
+                <div>月間稼働時間サマリーのスクリーンショットをここに差し込む</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="note">
+      <strong>⚠️ 繰越・前倒しの修正ルール</strong><br>
+      作業時間を繰越したり前倒ししたりする場合は、必ず稼働予定も修正してください。<br>
+      例）今日200分の予定で230分稼働した場合 → 今日の稼働予定を230分に修正し、別の日で30分を減らして月のトータルを契約時間に合わせる。
+    </div>
+  </section>
+
+  <!-- ② 稼働実績の入力 -->
+  <section class="section" id="result">
+    <div class="section-header">
+      <span class="section-num">02</span>
+      <span class="section-title">稼働実績の入力</span>
+    </div>
+
+    <div class="card">
+      <div class="card-title">📝 入力場所</div>
+      <p style="font-size:13px">画面左メニュー <span class="badge badge-gold">稼働予定・実績入力</span> → カレンダーの日付をクリックすると実績入力ポップアップが開きます。</p>
+    </div>
+
+    <div class="screenshot">
+      <div class="screenshot-bar">カレンダーの日付をクリック → 実績入力ポップアップ</div>
+      <div class="screenshot-body">
+        <div class="screenshot-placeholder">
+          <div class="icon">📸</div>
+          <div>実績入力ポップアップのスクリーンショットをここに差し込む</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" style="margin-top:20px">
+      <div class="card-title">✅ 入力ルール</div>
+      <ul class="rule-list">
+        <li><strong>必ず日次で入力してください。</strong>翌日以降にまとめて入力すると進捗把握がずれます。</li>
+        <li>件数の単位は<strong>クライアントが「1件」と数えるもの</strong>に合わせてください。筆数なのかエリア数なのかはクライアントによって異なります。</li>
+        <li>前倒しで作業した場合など、<strong>どの期間に対する作業件数か</strong>をタブで正しく選んで入力してください。</li>
+      </ul>
+    </div>
+
+    <div class="screenshot">
+      <div class="screenshot-bar">期間タブの選択 — 同じ案件でも期間ごとに入力可能</div>
+      <div class="screenshot-body">
+        <div class="screenshot-placeholder">
+          <div class="icon">📸</div>
+          <div>期間タブ（期間1・期間2）のスクリーンショットをここに差し込む</div>
+        </div>
+      </div>
+    </div>
+
+    <hr class="divider">
+
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-title">➕ 担当外の案件に実績が発生した場合</div>
+        <ul class="rule-list">
+          <li>ポップアップ下部の <span class="badge badge-gold">＋ その他の案件</span> から案件を検索して追加してください。</li>
+          <li>追加後、同じく期間を選んで件数・時間を入力します。</li>
+        </ul>
+        <div class="screenshot" style="margin-top:12px">
+          <div class="screenshot-bar">「その他の案件」追加UI</div>
+          <div class="screenshot-body" style="min-height:100px">
+            <div class="screenshot-placeholder">
+              <div class="icon">📸</div>
+              <div>その他の案件追加のスクリーンショット</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">⚡ スポット作業時間について</div>
+        <ul class="rule-list">
+          <li>探索代行以外の業務（社内業務など）に使った時間は <span class="badge badge-blue">スポット作業</span> 欄に入力してください。</li>
+          <li>基本的に以下が成立するように管理してください：<br><br>
+            <span style="color:#d4a050;font-size:12px;font-weight:700">稼働可能時間 ＝ 探索代行の実績時間 ＋ スポット作業時間</span>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="important-box">
+      <div class="label">⚠️ 重要：繰越・前倒しをした場合</div>
+      <p>作業時間を繰越した・前倒しした場合は、<strong style="color:#e07060">必ず稼働予定も修正</strong>してください。月のトータル稼働時間が契約時間と一致することを確認してください。</p>
+    </div>
+  </section>
+
+  <!-- ③ シュトセカ対応の記録（シュトセカメンバー向け） -->
+  <section class="section" id="shutseka">
+    <div class="section-header">
+      <span class="section-num">03</span>
+      <span class="section-title">シュトセカ対応の記録</span>
+    </div>
+
+    <div class="shutseka-section">
+      <div class="shutseka-header">🏢 シュトセカメンバー向け</div>
+      <div class="shutseka-body">
+        <p style="font-size:13px;margin-bottom:12px">シュトセカメンバーの実績入力ポップアップには、探索代行の案件実績欄とは別に <span class="badge badge-blue">🏢 シュトセカ対応</span> 欄が表示されます。</p>
+        <ul class="rule-list">
+          <li>シュトセカ業務として対応した<strong>件数</strong>と<strong>使った時間（分）</strong>を入力してください。</li>
+          <li>シュトセカ対応時間はスポット作業とは別の欄です。混同しないようにしてください。</li>
+        </ul>
+        <div class="screenshot" style="margin-top:14px">
+          <div class="screenshot-bar">シュトセカ対応入力欄（シュトセカメンバーのみ表示）</div>
+          <div class="screenshot-body" style="min-height:100px">
+            <div class="screenshot-placeholder">
+              <div class="icon">📸</div>
+              <div>シュトセカ対応欄のスクリーンショットをここに差し込む</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ④ 担当案件の進捗確認 -->
+  <section class="section" id="progress">
+    <div class="section-header">
+      <span class="section-num">04</span>
+      <span class="section-title">担当案件の進捗確認</span>
+    </div>
+
+    <div class="card">
+      <div class="card-title">📊 確認場所</div>
+      <p style="font-size:13px;margin-bottom:10px">画面左メニュー <span class="badge badge-gold">案件ダッシュボード</span> から確認できます。</p>
+      <ul class="rule-list">
+        <li>計画件数・実績件数・残件数が一覧で確認できます。</li>
+        <li>案件名をクリックすると詳細（期間別の進捗・メモなど）が展開されます。</li>
+      </ul>
+    </div>
+
+    <div class="screenshot">
+      <div class="screenshot-bar">案件ダッシュボード — 進捗一覧</div>
+      <div class="screenshot-body">
+        <div class="screenshot-placeholder">
+          <div class="icon">📸</div>
+          <div>案件ダッシュボードのスクリーンショットをここに差し込む</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ⑤ 案件割り振りの確認 -->
+  <section class="section" id="plan">
+    <div class="section-header">
+      <span class="section-num">05</span>
+      <span class="section-title">案件割り振りの確認</span>
+    </div>
+
+    <div class="card">
+      <div class="card-title">📋 確認場所</div>
+      <p style="font-size:13px;margin-bottom:10px">画面左メニュー <span class="badge badge-gold">OPS PLANNER</span> から確認できます。</p>
+      <ul class="rule-list">
+        <li>画面上部のメンバーフィルターで<strong>自分の名前</strong>を選ぶと、自分が担当している案件だけに絞り込まれて見やすくなります。</li>
+        <li>各案件の期間別の計画件数・実績・残件数が確認できます。</li>
+      </ul>
+    </div>
+
+    <div class="screenshot">
+      <div class="screenshot-bar">OPS PLANNER — メンバー絞り込み</div>
+      <div class="screenshot-body">
+        <div class="screenshot-placeholder">
+          <div class="icon">📸</div>
+          <div>OPS PLANNERのメンバー絞り込みのスクリーンショットをここに差し込む</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ⑥ 当日の件数目安 -->
+  <section class="section" id="today">
+    <div class="section-header">
+      <span class="section-num">06</span>
+      <span class="section-title">当日の件数目安</span>
+    </div>
+
+    <div class="card">
+      <div class="card-title">🌅 確認場所</div>
+      <p style="font-size:13px;margin-bottom:10px">毎日の作業開始前に <span class="badge badge-gold">朝会ボード</span> の <strong>今日のチーム稼働</strong> セクションを確認してください。</p>
+      <ul class="rule-list">
+        <li>自分のカードに「<strong>本日 ○件目安</strong>」と表示されます。これが今日の作業目標件数です。</li>
+        <li>スポット作業が入っている場合は分数も表示されます。</li>
+        <li>計画がない案件は表示されません。</li>
+      </ul>
+    </div>
+
+    <div class="screenshot">
+      <div class="screenshot-bar">朝会ボード — 今日のチーム稼働</div>
+      <div class="screenshot-body">
+        <div class="screenshot-placeholder">
+          <div class="icon">📸</div>
+          <div>朝会ボードの「今日のチーム稼働」のスクリーンショットをここに差し込む</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="note note-blue">
+      <strong>💡 件数目安の計算方法</strong><br>
+      計画入力（PLAN ENTRY）で設定した1日あたりの配分分数 ÷ 想定時間/件 で自動計算されます。計画が未入力の場合は表示されません。
+    </div>
+  </section>
+
+  <!-- ⑦ 案件情報の編集 -->
+  <section class="section" id="edit">
+    <div class="section-header">
+      <span class="section-num">07</span>
+      <span class="section-title">案件情報の編集</span>
+    </div>
+
+    <div class="card">
+      <div class="card-title">✏️ 編集ルール</div>
+      <ul class="rule-list">
+        <li>案件情報の編集は必ず <span class="badge badge-gold">案件ダッシュボード</span> から行ってください。</li>
+        <li>朝会ボードの案件進捗報告は<strong>表示専用</strong>です。ここから編集はできません。</li>
+      </ul>
+    </div>
+
+    <div class="important-box">
+      <div class="label">⚠️ 注意</div>
+      <p>朝会ボードに表示されている案件情報を変更したい場合も、必ず案件ダッシュボードから編集してください。朝会ボードの内容は自動的に更新されます。</p>
+    </div>
+  </section>
+
+  <!-- 補足情報 -->
+  <section class="section">
+    <div class="section-header">
+      <span class="section-num">+</span>
+      <span class="section-title">その他、知っておくと便利なこと</span>
+    </div>
+
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-title">🔔 掲示板の確認</div>
+        <ul class="rule-list" style="font-size:12px">
+          <li>左メニューの <span class="badge badge-gold">OPS掲示板</span> に未読投稿がある場合、赤いバッジが表示されます。</li>
+          <li>定期的に確認するようにしてください。</li>
+        </ul>
+      </div>
+      <div class="card">
+        <div class="card-title">📖 オンボーディング資料</div>
+        <ul class="rule-list" style="font-size:12px">
+          <li>左メニューの <span class="badge badge-gold">オンボーディング</span> に業務の基礎知識や注意事項がまとめてあります。</li>
+          <li>困ったときはまずここを確認してください。</li>
+        </ul>
+      </div>
+      <div class="card">
+        <div class="card-title">🐛 バグ・機能リクエスト確認</div>
+        <ul class="rule-list" style="font-size:12px">
+          <li>朝会ボードの <span class="badge badge-blue">バグ・機能リクエスト</span> セクションで、上がっているバグや要望の対応状況をチームで共有・確認できます。</li>
+          <li>作業に影響しそうな不具合情報もここで共有されます。</li>
+        </ul>
+      </div>
+      <div class="card">
+        <div class="card-title">📅 朝会ボードの活用</div>
+        <ul class="rule-list" style="font-size:12px">
+          <li>朝会では <span class="badge badge-gold">朝会ボード</span> の各セクションを上から順に確認します。</li>
+          <li>個人の連絡事項は「個人共有」セクションに投稿してください。</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<footer class="footer">
+  <strong>OPERATION CENTER</strong> — 探索代行 業務管理システム<br>
+  <span style="margin-top:6px;display:block">ご不明点は管理者または朝会ボードにてご相談ください</span>
+</footer>
+
+</body>
+</html>

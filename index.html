@@ -746,7 +746,121 @@
   </section>
 
   <!-- 補足情報 -->
-  <section class="section">
+  <section class="section" id="capacity">
+    <div class="section-header">
+      <span class="section-num">08</span>
+      <span class="section-title">稼働キャパシティの見方</span>
+    </div>
+
+    <div class="card">
+      <div class="card-title">📊 稼働キャパシティ画面とは</div>
+      <p style="font-size:13px;color:var(--text-sub);line-height:1.8;margin-bottom:12px">
+        探索代行・スポットメンバーの月間稼働状況を可視化する画面です。<br>
+        「月間稼働可能工数」に対して「消費予定時間」がどれくらいあるかを確認できます。
+      </p>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-top:8px">
+        <div style="padding:12px;background:rgba(64,128,192,0.1);border:1px solid rgba(64,128,192,0.3);border-radius:8px">
+          <div style="font-size:11px;font-weight:700;color:#60a0d0;margin-bottom:6px">🔵 月間稼働可能工数</div>
+          <p style="font-size:12px;color:var(--text-sub);margin:0;line-height:1.7">
+            探索代行 / スポット メンバーの稼働予定の合計。<br>
+            <strong style="color:var(--text)">定例30分を差し引いた</strong>実働可能時間です。
+          </p>
+        </div>
+        <div style="padding:12px;background:rgba(80,184,128,0.1);border:1px solid rgba(80,184,128,0.3);border-radius:8px">
+          <div style="font-size:11px;font-weight:700;color:#50c880;margin-bottom:6px">🟢 消費予定時間</div>
+          <p style="font-size:12px;color:var(--text-sub);margin:0;line-height:1.7">
+            初期セットアップ・有償代行・スポット割り振りの合計。<br>
+            下記の計算式で算出されます。
+          </p>
+        </div>
+        <div style="padding:12px;background:rgba(80,184,128,0.08);border:1px solid rgba(80,184,128,0.25);border-radius:8px">
+          <div style="font-size:11px;font-weight:700;color:#50c880;margin-bottom:6px">🟢 空き工数</div>
+          <p style="font-size:12px;color:var(--text-sub);margin:0;line-height:1.7">
+            月間稼働可能工数 <strong style="color:var(--text)">−</strong> 消費予定時間<br>
+            <span style="color:#d07060">赤</span>=超過 / <span style="color:#e0c040">黄</span>=残20%未満 / <span style="color:#50c880">緑</span>=余裕あり
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">⚙️ 消費予定時間の計算ロジック</div>
+      <div style="display:flex;flex-direction:column;gap:10px;margin-top:4px">
+
+        <div style="padding:12px 14px;background:rgba(64,160,176,0.08);border-left:3px solid #40a0b0;border-radius:0 6px 6px 0">
+          <div style="font-size:12px;font-weight:700;color:#40c0d0;margin-bottom:4px">🔷 本受注-初期セットアップ</div>
+          <div style="font-size:12px;color:var(--text-sub);line-height:1.8">
+            工数上限 ＝ <strong style="color:var(--text)">MRR × 15% ÷ ¥2,000 × 60分</strong><br>
+            作業期間が月をまたぐ場合は <strong style="color:var(--text)">平日稼働日数で按分</strong><br>
+            <span style="font-size:11px;color:#507080">※ MRR未設定の場合：想定時間(分) × 納品件数 で代替計算</span>
+          </div>
+        </div>
+
+        <div style="padding:12px 14px;background:rgba(224,160,64,0.08);border-left:3px solid #e0a040;border-radius:0 6px 6px 0">
+          <div style="font-size:12px;font-weight:700;color:#e0b040;margin-bottom:4px">🔶 本受注-有償代行</div>
+          <div style="font-size:12px;color:var(--text-sub);line-height:1.8">
+            <strong style="color:var(--text)">AI件数 × AI秒数 + セルフ件数 × セルフ秒数</strong>（÷ 60 で分換算）<br>
+            未割当件数は AI/セルフの平均秒数で補完<br>
+            作業期間が月をまたぐ場合は <strong style="color:var(--text)">平日稼働日数で按分</strong><br>
+            <span style="font-size:11px;color:#705030">※ 秒数未設定の場合：想定時間(分) × 納品件数 で代替計算</span>
+          </div>
+        </div>
+
+        <div style="padding:12px 14px;background:rgba(208,112,96,0.08);border-left:3px solid #d07060;border-radius:0 6px 6px 0">
+          <div style="font-size:12px;font-weight:700;color:#e07060;margin-bottom:4px">🔴 スポット割り振り済み</div>
+          <div style="font-size:12px;color:var(--text-sub);line-height:1.8">
+            <strong style="color:var(--text)">spot_allocations に登録された時間をそのまま加算</strong><br>
+            稼働予定画面のスポット工数割り振りで入力した時間が反映されます
+          </div>
+        </div>
+
+        <div style="padding:12px 14px;background:rgba(200,160,80,0.08);border:1px solid rgba(200,160,80,0.3);border-radius:6px">
+          <div style="font-size:12px;font-weight:700;color:#c8a050;margin-bottom:6px">⚠️ 注意：消費予定に反映されないケース</div>
+          <p style="font-size:12px;color:var(--text-sub);margin:0;line-height:1.8">
+            以下の案件種別は消費予定時間に<strong style="color:#e07060">自動では反映されません</strong>。<br>
+            作業時間が発生する場合は <span class="badge badge-gold">スポット工数割り振り</span> に入力してください。
+          </p>
+          <ul style="font-size:12px;color:var(--text-sub);margin:8px 0 0 16px;line-height:2">
+            <li>受注前条件確認</li>
+            <li>受注前サンプル</li>
+            <li>探索代行以外の案件（スポット作業依頼）</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">💡 フォールバック動作</div>
+      <table style="width:100%;border-collapse:collapse;font-size:12px">
+        <thead>
+          <tr style="background:rgba(200,160,80,0.1)">
+            <th style="text-align:left;padding:8px 10px;color:var(--accent);border-bottom:1px solid rgba(200,160,80,0.2);width:30%">項目</th>
+            <th style="text-align:left;padding:8px 10px;color:var(--accent);border-bottom:1px solid rgba(200,160,80,0.2)">フォールバック動作</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr style="border-bottom:1px solid rgba(255,255,255,0.05)">
+            <td style="padding:8px 10px;color:#60a0d0">月間稼働可能工数</td>
+            <td style="padding:8px 10px;color:var(--text-sub)">稼働予定が未入力かつ未確定の場合 → 前月同期間の実績で仮置き表示</td>
+          </tr>
+          <tr style="border-bottom:1px solid rgba(255,255,255,0.05)">
+            <td style="padding:8px 10px;color:#40c0d0">初期セットアップ</td>
+            <td style="padding:8px 10px;color:var(--text-sub)">MRR が未設定の場合 → 想定時間(分) × 納品件数 で代替計算</td>
+          </tr>
+          <tr style="border-bottom:1px solid rgba(255,255,255,0.05)">
+            <td style="padding:8px 10px;color:#e0b040">本受注-有償代行</td>
+            <td style="padding:8px 10px;color:var(--text-sub)">AI/セルフ秒数が未設定の場合 → 想定時間(分) × 納品件数 で代替計算</td>
+          </tr>
+          <tr>
+            <td style="padding:8px 10px;color:#a0b0c0">按分ルール</td>
+            <td style="padding:8px 10px;color:var(--text-sub)">月またぎ案件は「期間全体の平日数」に対する「当月平日数」の割合で按分</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+<section class="section">
     <div class="section-header">
       <span class="section-num">+</span>
       <span class="section-title">その他、知っておくと便利なこと</span>
